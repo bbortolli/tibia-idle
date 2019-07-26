@@ -13,25 +13,7 @@ class Character extends React.Component {
         };
     }
 
-    componentWillMount() {
-        this._get();
-    }
-
-    _get = async () => {
-        let token = await SecureStore.getItemAsync('token-key');
-        this.setState({'token': token}, () => console.log('  "token": '+this.state.token));
-    }
-
-
-
-    /*loadChar = async () => {
-        const res = await api.get(`/character/${this.props.id}`, { headers: { 'authorization': this.props.token}});
-        const { char } = res.data;
-        console.log(char);
-    }*/
-
     render() {
-        //this._get();
         return(
             <View style={styles.content}>
                 <View style={styles.header}>

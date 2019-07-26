@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { Alert, TextInput, Button, View, StyleSheet } from 'react-native';
+import api from '../config/api'
 
 class Login extends React.Component {
+
+    static navigationOptions = {
+        header: null,
+    };
 
     constructor(props){
         super(props);
@@ -9,6 +14,46 @@ class Login extends React.Component {
             userInput: '',
             passInput: '',
         };
+    }
+
+    handleSignUp = () => {
+        this.props.navigation.navigate('signup');
+    }
+
+    triggerLogin = async () => {
+        try {
+            const response = await api.post('/user/login', {username: this.state.userInput, password: this.state.passInput});
+            const { ...user } = response.data;
+            if (user){
+                // salvar redux token
+                console.log(user);
+            }
+        }
+        catch(err){
+            return;
+        }
+    }
+
+    handleLogin = () => {
+        if (this.checkEmptyFields()) {
+            this.triggerLogin();
+        }
+    }
+
+    checkEmptyFields = () => {
+        if (this.state.userInput === '' || this.state.passInput === '') {
+            Alert.alert(
+                'EMPTY FIELDS!',
+                'Username or password is missing...',
+                [
+                  {text: 'Got it! xD'},
+                ]
+            );
+            return false;                                
+        }
+        else {
+            return true;
+        }
     }
 
     render() {
@@ -39,30 +84,14 @@ class Login extends React.Component {
                     </View>
                     <View style={styles.btnContent}>
                         <Button 
-                            onPress={ () => {
-                                if (this.state.userInput === '' || this.state.passInput === '') {
-                                    Alert.alert(
-                                        'EMPTY FIELDS!',
-                                        'Username or password is missing...',
-                                        [
-                                          {text: 'Got it! xD'},
-                                        ]
-                                      );
-                                    return;                                
-                                }
-                                else {
-                                    return this.props.triggerLogin(this.state.userInput, this.state.passInput);
-                                }
-                            }
-                            }  
+                            onPress={ () => {this.handleLogin()} } 
                             title='Sign in' 
                             color='#fff'
                         />
                         <Button
-                            onPress={() => {}}
+                            onPress={ () => {this.handleSignUp()} }
                             title='Register'
                             color='#fff'
-                            disabled
                         />
                     </View>
                 </View>

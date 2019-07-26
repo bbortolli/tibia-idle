@@ -18,7 +18,7 @@ export default class Main extends React.Component {
     };
   }
 
-  componentDidMount() {
+  /*componentDidMount() {
     this._removeData();
   }
 
@@ -40,25 +40,7 @@ export default class Main extends React.Component {
 
   loginData = (user, pass) => {
     this.setState({'_USERID': user, '_PASSWORD': pass}, () => this.setSession() );
-  };
-
-  _saveData = async (user, id, email, token) => {
-    await SecureStore.setItemAsync('user-key', user);
-    await SecureStore.setItemAsync('id-key', id);
-    await SecureStore.setItemAsync('email-key', email);
-    await SecureStore.setItemAsync('token-key', token);
-  }
-
-  _saveToken = async (key) => {
-    await SecureStore.setItemAsync('token-key', key);
-  }
-
-  _removeData = async () => {
-    await SecureStore.deleteItemAsync('user-key');
-    await SecureStore.deleteItemAsync('id-key');
-    await SecureStore.deleteItemAsync('email-key');
-    await SecureStore.deleteItemAsync('token-key');
-  }
+  };*/
 
   render() {
     return (

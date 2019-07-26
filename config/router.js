@@ -1,15 +1,17 @@
 import React from 'react';
 import { Image } from 'react-native';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
-
+import { createStackNavigator, createBottomTabNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
 import Character from '../screens/Character';
 import Hunt from '../screens/Hunt';
 import Inventory from '../screens/Inventory';
 import Friends from '../screens/Friends';
 import Shop from '../screens/Shop';
 import Maps from '../screens/Maps';
+import Login from '../screens/Login';
+import Register from '../screens/Register';
+import AuthLoad from '../screens/AuthLoad';
 
-const Tabs = createBottomTabNavigator(
+const Home = createBottomTabNavigator(
     {
         char: {screen: Character},
         hunt: {screen: Hunt},
@@ -52,8 +54,28 @@ const Tabs = createBottomTabNavigator(
             inactiveBackgroundColor: '#204969',
             activeBackgroundColor: '#527289',   
         },
+        initialRouteName: 'char'
   },
   
 );
 
-export default createAppContainer(Tabs);
+const AuthScreen = createStackNavigator({
+  signin: Login,
+  signup: Register,
+},
+{
+  initialRouteName: 'signin'
+}
+);
+
+const Main = createSwitchNavigator({
+  authload: AuthLoad,
+  authscreen: AuthScreen,
+  app: Home,
+},
+{
+  initialRouteName: 'authload'
+}
+);
+
+export default createAppContainer(Main);
