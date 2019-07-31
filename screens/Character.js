@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import api from '../config/api'
 import * as SecureStore from 'expo-secure-store'
@@ -12,6 +12,10 @@ class Character extends React.Component {
             token: ''
         };
     }
+    handleLogout = async () => {
+        await SecureStore.deleteItemAsync('userToken');
+        this.props.navigation.navigate('authload');
+    };
 
     render() {
         return(
@@ -19,7 +23,9 @@ class Character extends React.Component {
                 <View style={styles.header}>
                     <Text style={styles.title}> Character </Text>
                 </View>
-                <Text style={styles.title}> Character </Text>
+                <TouchableOpacity onPress={this.handleLogout}>
+                    <Text style={styles.logoutText}>Sair da conta!</Text>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -40,6 +46,11 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 25,
         color: '#fff',
+    },
+    logoutText: {
+        color: '#204969',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

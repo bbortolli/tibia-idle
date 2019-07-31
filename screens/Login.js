@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Alert, TextInput, Button, View, StyleSheet } from 'react-native';
 import api from '../config/api'
+import * as SecureStore from 'expo-secure-store';
 
 class Login extends React.Component {
 
@@ -25,6 +26,8 @@ class Login extends React.Component {
             const response = await api.post('/user/login', {username: this.state.userInput, password: this.state.passInput});
             const { ...user } = response.data;
             if (user){
+                const storeResponse = await SecureStore.setItemAsync('userToken', user.token);
+                this.props.navigation.navigate('authload');
                 // salvar redux token
                 console.log(user);
             }
