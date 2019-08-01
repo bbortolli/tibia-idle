@@ -1,19 +1,40 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Image, Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import api from '../config/api'
+import { FlatList } from 'react-native-gesture-handler';
 
 class Shop extends React.Component {
 
-    /*componentDidMount() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            itemList : [],
+        }
+    }
+
+    componentDidMount() {
         this.loadShop();
     }
 
     loadShop = async () => {
-        const res = await api.get('/shop');
-        const { shop } = res;
-        console.log(shop);
-    }*/
+        const lvl = 5;
+        const res = await api.get(`/item/shop/${lvl}`);
+        const itemList = res.data;
+        this.setState({itemList});
+        console.log(itemList);
+    }
+
+    renderItem = ({ item }) => (
+        <View style={styles.listItem}>
+            <Image source={require('../assets/icons/hunt.png')} style={{width: 55, height: 55}}/>
+            <View style={styles.dataContent}>
+                <Text style={styles.itemTitle}>{item.name}</Text>
+                <Text style={styles.itemDesc}>Tipo: {item.type}</Text>
+                <Text style={styles.itemDesc}>Preço: {item.buyPrice}</Text>
+            </View>
+        </View>
+    );
 
     render() {
         return(
@@ -21,7 +42,11 @@ class Shop extends React.Component {
                 <View style={styles.header}>
                     <Text style={styles.title}> Shop </Text>
                 </View>
-                <Text style={styles.title}> Shop </Text>
+                <FlatList
+                    data={this.state.itemList}
+                    keyExtractor={item => item._id.toString()}
+                    renderItem={this.renderItem}
+                />
             </View>
         );
     };
@@ -36,12 +61,30 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         paddingBottom: 5,
         width: '100%',
-        flex: 0.05,
         alignItems: 'center',
     },
     title: {
         fontSize: 25,
         color: '#fff',
+    },
+    listItem: {
+        flexDirection: 'row',
+        backgroundColor: '#204969',
+        padding: 8,
+        borderColor: '#f9e090',
+        borderWidth: 5
+    },
+    dataContent: {
+        flexDirection: 'column',
+        paddingLeft: 5,
+    },
+    itemTitle: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    itemDesc: {
+        color: '#fff',
+        fontWeight: '400'
     }
 });
 

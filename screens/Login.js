@@ -26,7 +26,8 @@ class Login extends React.Component {
             const response = await api.post('/user/login', {username: this.state.userInput, password: this.state.passInput});
             const { ...user } = response.data;
             if (user){
-                const storeResponse = await SecureStore.setItemAsync('userToken', user.token);
+                await SecureStore.setItemAsync('userToken', user.token);
+                await SecureStore.setItemAsync('userId', user.id);
                 this.props.navigation.navigate('authload');
                 // salvar redux token
                 console.log(user);

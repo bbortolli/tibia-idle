@@ -9,9 +9,21 @@ class Character extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            token: ''
-        };
+            userToken: '',
+            userId: ''
+        }
     }
+
+    componentDidMount() {
+        this.setData();
+    }
+
+    setData = async () => {
+        const userToken = await SecureStore.getItemAsync('userToken');
+        const userId = await SecureStore.getItemAsync('userId');
+        this.setState({userToken, userId});
+    }
+
     handleLogout = async () => {
         await SecureStore.deleteItemAsync('userToken');
         this.props.navigation.navigate('authload');

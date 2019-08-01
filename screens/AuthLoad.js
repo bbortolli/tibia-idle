@@ -10,7 +10,6 @@ export default class App extends React.Component {
 
     _goToScreen = async () => {
         const userToken = await SecureStore.getItemAsync('userToken');
-        console.log(userToken);
         this.props.navigation.navigate(userToken === null ? 'authscreen' : 'app');
     }
 
