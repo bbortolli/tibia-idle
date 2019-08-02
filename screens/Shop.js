@@ -27,7 +27,7 @@ class Shop extends React.Component {
 
     renderItem = ({ item }) => (
         <View style={styles.listItem}>
-            <Image source={require('../assets/icons/hunt.png')} style={{width: 55, height: 55}}/>
+            <Image source={require('../assets/icons/no-shop.png')} style={{width: 55, height: 55}}/>
             <View style={styles.dataContent}>
                 <Text style={styles.itemTitle}>{item.name}</Text>
                 <Text style={styles.itemDesc}>Tipo: {item.type}</Text>
