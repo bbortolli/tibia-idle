@@ -44,7 +44,7 @@ class Inventory extends React.Component {
                 </View>
                 <FlatList
                     data={this.state.itemList}
-                    keyExtractor={item => item._id.toString()}
+                    keyExtractor={ (_, index) => index.toString()}
                     renderItem={this.renderItem}
                 />
             </View>
