@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
+import { connect } from 'react-redux';
 import api from '../config/api'
 import * as SecureStore from 'expo-secure-store'
+import { removeUserToken, getUserToken } from '../store/actions/tokenAction'
 
 class Character extends React.Component {
 
@@ -14,22 +16,33 @@ class Character extends React.Component {
         }
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         this.setData();
-    }
+    }*/
 
-    setData = async () => {
-        const userToken = await SecureStore.getItemAsync('userToken');
-        const userId = await SecureStore.getItemAsync('userId');
-        this.setState({userToken, userId});
-    }
+    setData = () =>
+        //console.log(this.props);
+        //const userToken = await SecureStore.getItemAsync('userToken');
+        //const userId = await SecureStore.getItemAsync('userId');
+        //this.setState({userToken, userId});
+        this.props.getUserToken().then(() => {
+            console.log(this.props.token);
+        })
+        .catch( err => {
+            this.setState({err});
+        })
 
-    handleLogout = async () => {
-        await SecureStore.deleteItemAsync('userToken');
-        this.props.navigation.navigate('authload');
-    };
+    handleLogout = () => 
+        this.props.removeUserToken().then(() => {
+            console.log(this.props.token);
+            this.props.navigation.navigate('authscreen');
+        })
+        .catch( err => {
+            this.setState({err});
+        })
 
     render() {
+        this.setData();
         return(
             <View style={styles.content}>
                 <View style={styles.header}>
@@ -66,4 +79,13 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Character;
+const mapStateToProps = state => ({
+    token: state.token,
+});
+
+const mapDispatchToProps = dispatch => ({
+    removeUserToken: () => dispatch(removeUserToken()),
+    getUserToken: () => dispatch(getUserToken()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Character);

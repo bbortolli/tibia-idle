@@ -1,21 +1,28 @@
 import * as React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import { connect } from 'react-redux';
+import { getUserToken } from '../store/actions/tokenAction';
 
-export default class App extends React.Component {
+class AuthLoad extends React.Component {
 
-    constructor(props){
-        super(props);
-    }
-
-    _goToScreen = async () => {
-        const userToken = await SecureStore.getItemAsync('userToken');
-        this.props.navigation.navigate(userToken === null ? 'authscreen' : 'app');
+    constructor(){
+        super();
     }
 
     componentDidMount() {
         this._goToScreen();
     };
+
+    _goToScreen = () => {
+        //console.log(this.props.getUserToken());
+        this.props.getUserToken().then(() => {
+            //console.log(this.props.token);
+            this.props.navigation.navigate(this.props.token !== null ? 'app' : 'authscreen'); 
+        })
+        .catch( err => {
+            this.setState({err});
+        })
+    }
 
     render() {
         return (
@@ -31,3 +38,14 @@ const styles = StyleSheet.create({
     flex: 1,
   }
 });
+
+const mapStateToProps = state => ({
+    token: state.token,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+    getUserToken: () => dispatch(getUserToken()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthLoad);

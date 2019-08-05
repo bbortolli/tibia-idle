@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Alert, TextInput, Button, View, StyleSheet } from 'react-native';
-import api from '../config/api'
-import * as SecureStore from 'expo-secure-store';
+import { connect } from 'react-redux';
+import api from '../config/api';
+import { saveUserToken } from '../store/actions/tokenAction';
 
 class Login extends React.Component {
 
@@ -22,12 +23,14 @@ class Login extends React.Component {
     }
 
     triggerLogin = async () => {
+        /*
         try {
             const response = await api.post('/user/login', {username: this.state.userInput, password: this.state.passInput});
             const { ...user } = response.data;
             if (user){
-                await SecureStore.setItemAsync('userToken', user.token);
-                await SecureStore.setItemAsync('userId', user.id);
+                //await SecureStore.setItemAsync('userToken', user.token);
+                //await SecureStore.setItemAsync('userId', user.id);
+                await this.props.setUserToken
                 this.props.navigation.navigate('authload');
                 // salvar redux token
                 console.log(user);
@@ -35,7 +38,22 @@ class Login extends React.Component {
         }
         catch(err){
             return;
+        }*/
+
+        const response = await api.post('/user/login', {username: this.state.userInput, password: this.state.passInput});
+        const { ...user } = response.data;
+        //console.log(user.token);
+        if (user){
+            this.props.saveUserToken(user.token)
+                .then(() => {
+                    this.props.navigation.navigate('app');
+                })
+                .catch((error) => {
+                    this.setState({ error })
+                })
         }
+
+        return;
     }
 
     handleLogin = () => {
@@ -145,4 +163,13 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
+const mapStateToProps = state => ({
+    token: state.token,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+    saveUserToken: (token) => dispatch(saveUserToken(token)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
